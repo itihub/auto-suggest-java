@@ -108,7 +108,6 @@ public class Main {
         String prefix = "";
         StringBuilder sb = new StringBuilder();
         List<String> words = null;
-        int wordsIndex = 0;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -135,13 +134,11 @@ public class Main {
                         String previousWord = sb.toString().split(" ")[sb.toString().split(" ").length - 1];
 
                         if (words != null) {
-                            if (!previousWord.equals(words.get(wordsIndex - 1))) {
+                            if (!previousWord.equals(words.get(0))) {
                                 words = dictionary.autoSuggest(prefix);
-                                wordsIndex = 0;
                             }
                         } else {
                             words = dictionary.autoSuggest(prefix);
-                            wordsIndex = 0;
                         }
 
                         for (int i = prefix.length(); i < previousWord.length(); i++) {
@@ -149,10 +146,10 @@ public class Main {
                             sb.deleteCharAt(sb.length() - 1);
                         }
 
-                        if (words.size() > 0 && wordsIndex < words.size()) {
-                            String output = words.get(wordsIndex++);
-                            System.out.print(output.substring(prefix.length()));
-                            sb.append(output.substring(prefix.length()));
+                        if (words != null && !words.isEmpty()) {
+                            System.out.println("\nSuggestions: " + String.join(", ", words));
+                        } else {
+                            System.out.println("\nNo suggestions found.");
                         }
                         continue;
                     } else if (input != '\t') {
@@ -160,7 +157,6 @@ public class Main {
                         prefix += input;
                         sb.append(input);
                         words = null;
-                        wordsIndex = 0;
                     }
                 }
             }
