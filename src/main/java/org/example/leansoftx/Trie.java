@@ -35,9 +35,16 @@ public class Trie {
         return getAllWordsWithPrefix(currentNode, prefix);
     }
 
-    public List<String> getAllWordsWithPrefix(TrieNode node, String prefix) {
-        return null;
+public List<String> getAllWordsWithPrefix(TrieNode node, String prefix) {
+    List<String> results = new ArrayList<>();
+    if (node.isEndOfWord) {
+        results.add(prefix);
     }
+    for (Map.Entry<Character, TrieNode> entry : node.children.entrySet()) {
+        results.addAll(getAllWordsWithPrefix(entry.getValue(), prefix + entry.getKey()));
+    }
+    return results;
+}
 
     public List<String> getAllWords() {
         return getAllWordsWithPrefix(root, "");
@@ -92,7 +99,7 @@ public class Trie {
     public static int levenshteinDistance(String s, String t) {
         int m = s.length();
         int n = t.length();
-        int[][] d = new int[m][n];
+        int[][] d = new int[m + 1][n + 1];
 
         if (m == 0) {
             return n;
@@ -113,12 +120,38 @@ public class Trie {
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
                 int cost = (s.charAt(i - 1) == t.charAt(j - 1)) ? 0 : 1;
-                d[i][j] = Math.min(Math.min(d[i][j] + 1, d[i][j] + 1), d[i][j] + cost);
+                d[i][j] = Math.min(Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1), d[i - 1][j - 1] + cost);
             }
         }
 
         return d[m][n];
     }
 
+
+    public boolean search(String input) {
+        TrieNode current = root;
+        for (char c : input.toCharArray()) {
+            if (!current.hasChild(c)) {
+                return false;
+            }
+            current = current.children.get(c);
+        }
+        return current.isEndOfWord;
+    }
+
+    public void delete(String input) {
+        if (search(input)) {
+            TrieNode current = root;
+            for (char c : input.toCharArray()) {
+                TrieNode child = current.children.get(c);
+                if (child.children.size() == 0) {
+                    current.children.remove(c);
+                    return;
+                }
+                current = child;
+            }
+            current.isEndOfWord = false;
+        }
+    }
 
 }

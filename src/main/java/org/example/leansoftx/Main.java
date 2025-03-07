@@ -20,10 +20,10 @@ public class Main {
     public static void main(String[] args) {
 
         dictionary.printTrieStructure();
-        //searchWord();
-        //prefixAutoComplete();
-        //deleteWord();
-        //getSpellingSuggestions();
+//        searchWord();
+        prefixAutoComplete();
+//        deleteWord();
+//        getSpellingSuggestions();
 
     }
 
@@ -44,11 +44,9 @@ public class Main {
             if (input.isEmpty()) {
                 break;
             }
-            /*
             if (dictionary.search(input)) {
                 System.out.println("Found \"" + input + "\" in dictionary");
             }
-            */
             else {
                 System.out.println("Did not find \"" + input + "\" in dictionary");
             }
@@ -70,13 +68,11 @@ public class Main {
             if (input.isEmpty()) {
                 break;
             }
-            /*
             if (dictionary.search(input)) {
                 dictionary.delete(input);
                 System.out.println("Deleted \"" + input + "\" from dictionary\n");
                 printTrie(dictionary);
             }
-            */
             else {
                 System.out.println("Did not find \"" + input + "\" in dictionary");
             }
@@ -88,8 +84,11 @@ public class Main {
         printTrie(dictionary);
         System.out.println("\nEnter a word to get spelling suggestions for, or press Enter to exit.");
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        if (!input.isEmpty()) {
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.isEmpty()) {
+                break;
+            }
             List<String> similarWords = dictionary.getSpellingSuggestions(input);
             System.out.println("Spelling suggestions for \"" + input + "\":");
             if (similarWords.isEmpty()) {
